@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppMobileTaS.Views.vHome"
+             Title="Sistema de Calificaciones"
+             BackgroundColor="{AppThemeBinding Light={StaticResource ColorFondo}, Dark={StaticResource ColorFondoOscuro}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Paleta -->
+            <Color x:Key="ColorPrimario">#1E3A8A</Color>
+            <Color x:Key="ColorPrimarioClaro">#3B82F6</Color>
+            <Color x:Key="ColorAcento">#0EA5E9</Color>
+            <Color x:Key="ColorFondo">#F1F5F9</Color>
+            <Color x:Key="ColorFondoOscuro">#0F172A</Color>
+            <Color x:Key="ColorTarjeta">#FFFFFF</Color>
+            <Color x:Key="ColorTarjetaOscuro">#1E293B</Color>
+            <Color x:Key="ColorCampo">#F8FAFC</Color>
+            <Color x:Key="ColorCampoOscuro">#334155</Color>
+            <Color x:Key="ColorBorde">#E2E8F0</Color>
+            <Color x:Key="ColorBordeOscuro">#475569</Color>
+            <Color x:Key="ColorTexto">#0F172A</Color>
+            <Color x:Key="ColorTextoOscuro">#F1F5F9</Color>
+            <Color x:Key="ColorTextoSecundario">#64748B</Color>
+            <Color x:Key="ColorTextoSecundarioOscuro">#94A3B8</Color>
+            <Color x:Key="ColorAprobado">#16A34A</Color>
+            <Color x:Key="ColorComplementario">#D97706</Color>
+            <Color x:Key="ColorReprobado">#DC2626</Color>
+
+            <!-- Tarjeta -->
+            <Style x:Key="Tarjeta" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ColorTarjeta}, Dark={StaticResource ColorTarjetaOscuro}}" />
+                <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource ColorBorde}, Dark={StaticResource ColorBordeOscuro}}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="Shadow">
+                    <Shadow Brush="#1E3A8A" Opacity="0.08" Radius="16" Offset="0,6" />
+                </Setter>
+            </Style>
+
+            <!-- Contenedor de campo de texto -->
+            <Style x:Key="Campo" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ColorCampo}, Dark={StaticResource ColorCampoOscuro}}" />
+                <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource ColorBorde}, Dark={StaticResource ColorBordeOscuro}}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="52" />
+            </Style>
+
+            <!-- Etiqueta de peso (×0,3 / ×0,2) -->
+            <Style x:Key="ChipPeso" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#DBEAFE" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TextoChipPeso" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource ColorPrimario}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="TituloSeccion" TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ColorTexto}, Dark={StaticResource ColorTextoOscuro}}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EtiquetaCampo" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ColorTextoSecundario}, Dark={StaticResource ColorTextoSecundarioOscuro}}" />
+            </Style>
+
+            <Style x:Key="EntradaNota" TargetType="Entry">
+                <Setter Property="Keyboard" Value="Numeric" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource ColorTexto}, Dark={StaticResource ColorTextoOscuro}}" />
+                <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource ColorTextoSecundario}, Dark={StaticResource ColorTextoSecundarioOscuro}}" />
+            </Style>
+
+            <!-- Resultado del parcial -->
+            <Style x:Key="ResultadoParcial" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="Padding" Value="14,10" />
+            </Style>
+
+            <!-- Número circular de sección -->
+            <Style x:Key="NumeroSeccion" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimario}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+                <Setter Property="WidthRequest" Value="28" />
+                <Setter Property="HeightRequest" Value="28" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Spacing="16" Padding="0,0,0,24">
+
+                <!-- Encabezado -->
+                <Border StrokeThickness="0" Padding="24,36,24,56">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="0,0,28,28" />
+                    </Border.StrokeShape>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource ColorPrimario}" Offset="0" />
+                            <GradientStop Color="{StaticResource ColorPrimarioClaro}" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="UISRAEL"
+                               TextColor="#BFDBFE"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               CharacterSpacing="2" />
+                        <Label Text="Sistema de Calificaciones"
+                               TextColor="White"
+                               FontSize="26"
+                               FontAttributes="Bold" />
+                        <Label Text="Registra las notas y obtén el resultado al instante"
+                               TextColor="#DBEAFE"
+                               FontSize="14" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Spacing="16" Padding="16,0" Margin="0,-44,0,0">
+
+                    <!-- Datos del estudiante -->
+                    <Border Style="{StaticResource Tarjeta}">
+                        <VerticalStackLayout Spacing="14">
+                            <Label Text="Datos del estudiante" Style="{StaticResource TituloSeccion}" />
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Estudiante" Style="{StaticResource EtiquetaCampo}" />
+                                <Border Style="{StaticResource Campo}">
+                                    <Picker x:Name="pkEstudiante"
+                                            Title="Seleccione un estudiante"
+                                            FontSize="16"
+                                            VerticalOptions="Center"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{AppThemeBinding Light={StaticResource ColorTexto}, Dark={StaticResource ColorTextoOscuro}}"
+                                            TitleColor="{AppThemeBinding Light={StaticResource ColorTextoSecundario}, Dark={StaticResource ColorTextoSecundarioOscuro}}">
+                                        <Picker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                                <x:String>Ana Torres</x:String>
+                                                <x:String>Carlos Mendoza</x:String>
+                                                <x:String>Daniela Vera</x:String>
+                                                <x:String>Luis Paredes</x:String>
+                                                <x:String>María Salazar</x:String>
+                                            </x:Array>
+                                        </Picker.ItemsSource>
+                                    </Picker>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Fecha" Style="{StaticResource EtiquetaCampo}" />
+                                <Border Style="{StaticResource Campo}">
+                                    <DatePicker x:Name="dpFecha"
+                                                Format="dd/MM/yyyy"
+                                                FontSize="16"
+                                                VerticalOptions="Center"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{AppThemeBinding Light={StaticResource ColorTexto}, Dark={StaticResource ColorTextoOscuro}}" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- PARCIAL 1 -->
+                    <Border Style="{StaticResource Tarjeta}">
+                        <VerticalStackLayout Spacing="14">
+                            <HorizontalStackLayout Spacing="10">
+                                <Border Style="{StaticResource NumeroSeccion}">
+                                    <Label Text="1" TextColor="White" FontAttributes="Bold"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <Label Text="Parcial 1" Style="{StaticResource TituloSeccion}" />
+                            </HorizontalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Nota de seguimiento" Style="{StaticResource EtiquetaCampo}" />
+                                <Border Style="{StaticResource Campo}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Entry x:Name="txtSeguimiento1"
+                                               Placeholder="0 - 10"
+                                               Style="{StaticResource EntradaNota}"
+                                               TextChanged="OnNotaChanged" />
+                                        <Border Grid.Column="1" Style="{StaticResource ChipPeso}">
+                                            <Label Text="× 0,3" Style="{StaticResource TextoChipPeso}" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Examen" Style="{StaticResource EtiquetaCampo}" />
+                                <Border Style="{StaticResource Campo}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Entry x:Name="txtExamen1"
+                                               Placeholder="0 - 10"
+                                               Style="{StaticResource EntradaNota}"
+                                               TextChanged="OnNotaChanged" />
+                                        <Border Grid.Column="1" Style="{StaticResource ChipPeso}">
+                                            <Label Text="× 0,2" Style="{StaticResource TextoChipPeso}" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <Border Style="{StaticResource ResultadoParcial}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Nota Parcial 1"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource ColorPrimario}, Dark=White}" />
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label x:Name="lblParcial1"
+                                               Text="0.00"
+                                               FontSize="22"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource ColorPrimario}, Dark=White}" />
+                                        <Label Text=" / 5"
+                                               FontSize="14"
+                                               VerticalOptions="End"
+                                               Margin="0,0,0,3"
+                                               TextColor="{AppThemeBinding Light={StaticResource ColorTextoSecundario}, Dark=#BFDBFE}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- PARCIAL 2 -->
+                    <Border Style="{StaticResource Tarjeta}">
+                        <VerticalStackLayout Spacing="14">
+                            <HorizontalStackLayout Spacing="10">
+                                <Border Style="{StaticResource NumeroSeccion}">
+                                    <Label Text="2" TextColor="White" FontAttributes="Bold"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <Label Text="Parcial 2" Style="{StaticResource TituloSeccion}" />
+                            </HorizontalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Nota de seguimiento" Style="{StaticResource EtiquetaCampo}" />
+                                <Border Style="{StaticResource Campo}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Entry x:Name="txtSeguimiento2"
+                                               Placeholder="0 - 10"
+                                               Style="{StaticResource EntradaNota}"
+                                               TextChanged="OnNotaChanged" />
+                                        <Border Grid.Column="1" Style="{StaticResource ChipPeso}">
+                                            <Label Text="× 0,3" Style="{StaticResource TextoChipPeso}" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Examen" Style="{StaticResource EtiquetaCampo}" />
+                                <Border Style="{StaticResource Campo}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Entry x:Name="txtExamen2"
+                                               Placeholder="0 - 10"
+                                               Style="{StaticResource EntradaNota}"
+                                               TextChanged="OnNotaChanged" />
+                                        <Border Grid.Column="1" Style="{StaticResource ChipPeso}">
+                                            <Label Text="× 0,2" Style="{StaticResource TextoChipPeso}" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <Border Style="{StaticResource ResultadoParcial}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Nota Parcial 2"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource ColorPrimario}, Dark=White}" />
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label x:Name="lblParcial2"
+                                               Text="0.00"
+                                               FontSize="22"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource ColorPrimario}, Dark=White}" />
+                                        <Label Text=" / 5"
+                                               FontSize="14"
+                                               VerticalOptions="End"
+                                               Margin="0,0,0,3"
+                                               TextColor="{AppThemeBinding Light={StaticResource ColorTextoSecundario}, Dark=#BFDBFE}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- NOTA FINAL -->
+                    <Border Style="{StaticResource Tarjeta}">
+                        <VerticalStackLayout Spacing="14">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="NOTA FINAL"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           CharacterSpacing="1"
+                                           Style="{StaticResource EtiquetaCampo}" />
+                                    <HorizontalStackLayout Spacing="2">
+                                        <Label x:Name="lblNotaFinal"
+                                               Text="0.00"
+                                               FontSize="44"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource ColorTexto}, Dark={StaticResource ColorTextoOscuro}}" />
+                                        <Label Text=" / 10"
+                                               FontSize="18"
+                                               VerticalOptions="End"
+                                               Margin="0,0,0,8"
+                                               Style="{StaticResource EtiquetaCampo}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Border x:Name="brdEstado"
+                                        Grid.Column="1"
+                                        VerticalOptions="Center"
+                                        Padding="14,8"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 20"
+                                        BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}">
+                                    <Label x:Name="lblEstado"
+                                           Text="Sin calcular"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource ColorTextoSecundario}, Dark={StaticResource ColorTextoSecundarioOscuro}}" />
+                                </Border>
+                            </Grid>
+
+                            <ProgressBar x:Name="pbNotaFinal"
+                                         Progress="0"
+                                         HeightRequest="8"
+                                         ProgressColor="{StaticResource ColorPrimarioClaro}" />
+
+                            <!-- Leyenda -->
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                                <Border Grid.Column="0" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                        Padding="8,6" BackgroundColor="#FEE2E2">
+                                    <VerticalStackLayout HorizontalOptions="Center">
+                                        <Label Text="0 – 4,9" FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource ColorReprobado}" HorizontalOptions="Center" />
+                                        <Label Text="Reprobado" FontSize="11"
+                                               TextColor="{StaticResource ColorReprobado}" HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border Grid.Column="1" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                        Padding="8,6" BackgroundColor="#FEF3C7">
+                                    <VerticalStackLayout HorizontalOptions="Center">
+                                        <Label Text="5 – 6,9" FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource ColorComplementario}" HorizontalOptions="Center" />
+                                        <Label Text="Complementario" FontSize="11"
+                                               TextColor="{StaticResource ColorComplementario}" HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border Grid.Column="2" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                        Padding="8,6" BackgroundColor="#DCFCE7">
+                                    <VerticalStackLayout HorizontalOptions="Center">
+                                        <Label Text="7 – 10" FontSize="12" FontAttributes="Bold"
+                                               TextColor="{StaticResource ColorAprobado}" HorizontalOptions="Center" />
+                                        <Label Text="Aprobado" FontSize="11"
+                                               TextColor="{StaticResource ColorAprobado}" HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Acciones -->
+                    <Button Text="Calcular notas del estudiante"
+                            HeightRequest="54"
+                            CornerRadius="14"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            BackgroundColor="{StaticResource ColorPrimario}"
+                            Clicked="OnCalcularClicked">
+                        <Button.Shadow>
+                            <Shadow Brush="#1E3A8A" Opacity="0.3" Radius="12" Offset="0,6" />
+                        </Button.Shadow>
+                    </Button>
+
+                    <Button Text="Limpiar formulario"
+                            HeightRequest="48"
+                            CornerRadius="14"
+                            FontSize="15"
+                            BackgroundColor="Transparent"
+                            BorderWidth="1"
+                            BorderColor="{AppThemeBinding Light={StaticResource ColorBorde}, Dark={StaticResource ColorBordeOscuro}}"
+                            TextColor="{AppThemeBinding Light={StaticResource ColorPrimario}, Dark={StaticResource ColorTextoOscuro}}"
+                            Clicked="OnLimpiarClicked" />
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
